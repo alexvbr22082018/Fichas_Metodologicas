@@ -82,7 +82,7 @@ params <- list(
 
 ***
 #### Definición:
-La `r params$nombreindicador` es la relación del total de muertes de peronas menores de 18 años (NNA) por suicidios por cada 100.000 habitantes.
+La `r params$nombreindicador` es la relación del total de muertes de personas menores de 18 años (NNA) por suicidios por cada 100.000 habitantes.
 
 ***
 #### Periodo:
