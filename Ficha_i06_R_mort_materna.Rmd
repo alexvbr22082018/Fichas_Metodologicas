@@ -1,0 +1,356 @@
+---
+author: "Laboratorio Social - INEC"
+date: "16/7/2019"
+output:
+  html_fragment:
+  # html_document:
+    toc: true
+    # toc_float: true
+    toc_collapsed: false
+    toc_depth: 4
+    # highlight: tango
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+library(purrr)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(ggplot2)
+library(lubridate)
+library(tibble)
+library(knitr)
+library(kableExtra)
+
+path <- here::here("data/i01")
+
+a <- readRDS(str_c(path,'/lista_ficha.RDS'))
+
+# a <-
+# 
+#   readRDS('C://Users/DELL/Dropbox/2019_06_UNICEF_social_lab/99_indicadores/03_Resultados_RDS/lista_ficha.RDS')
+
+
+indicador <-  'i06_R_mort_materna'
+
+params <- list(
+  
+  nombreindicador= a[[indicador]][['nombre']],
+  
+  bdd1 = if(a[[indicador]][['base']]=='defunciones_generales') {
+        'Base de datos de Defunciones Generales'} else {
+    
+    if(a[[indicador]][['base']]=='nacimientos') { 
+          'Base de datos de Nacimientos' } else {
+        
+        if(a[[indicador]][['base']]=='defunciones_fetales') {
+              'Base de datos de Defunciones Fetales'} else {
+            
+            if(a[[indicador]][['base']]=='egresos') {
+                  'Base de datos de Egresos Hospitalarios'
+              
+                                                     }
+                                                        }
+                                            }
+                                                   },
+  
+  bdd2 = a[[indicador]][['base2']],
+  
+  unidad = a[[indicador]][['unidad']],
+  
+  interpret = a[[indicador]][['Interpret']],
+  
+  ods = str_c(a[[indicador]][['ods']], a[[indicador]][['ods_desc']], sep = ' '),
+  
+  plan = str_c(a[[indicador]][['plan']], a[[indicador]][['plan_desc']], sep = ' '),
+  
+  convencion = str_c(a[[indicador]][['convencion']], a[[indicador]][['convencion_desc']], sep = ' '),
+  
+  software = 'R version 3.6.1'
+
+)
+
+
+```
+***
+## Ficha Metodológica
+***
+
+#### Nombre del Indicador: 
+`r params$nombreindicador`
+
+***
+#### Definición:
+La `r params$nombreindicador` es el número de muertes maternas ocurridas durante el embarazo o dentro de los 42 días siguientes a la terminación del mismo por cada 100.000 nacidos vivos en periodo determinado. 
+
+***
+#### Periodo:
+2013 - 2017
+
+***
+
+#### Fuente:
+ `r params$bdd1`
+
+ `r params$bdd2`
+
+***
+
+### Unidades:
+`r params$unidad`
+
+***
+
+### Interpretación:
+`r params$interpret`
+
+***
+#### Fórmula
+
+$$ RMM^t = \frac{\sum_{j}^{k} \sum_i^n{d_{i,j}^t}}{\sum NV^t} * K $$
+
+
+- $RMM^t$    : `r params$nombreindicador` en el periodo **t**.
+
+- $d_{i,j}^t$: Defunción materna **i** ocurrida durante la categoria de tiempo **j** en el periodo **t**.
+
+- $\sum NV^t$: Total de nacimientos en el periodo *t*.
+
+- $i$        : Defunción materna **i**.
+
+- $j$        : Categoria *j* durante la cual ocurre la muerte materna $\epsilon$ (embarazo, parto, puerperio (42 días después de la terminación del embarazo) .
+
+- $K$        : Constante = 100.000.
+
+
+***
+
+#### Desagregaciones:
+```{r echo=F}
+
+b <- 
+  
+  a[[indicador]][['labels']] %>% 
+  
+  set_names(nm = c('Variable','label')) %>%
+  
+  group_by(Variable) %>% summarise(Descripcion=first(label))
+
+
+```
+
+
+```{r varlabel, echo=F}
+
+cat('\n')
+
+b %>%
+  
+  kable(caption = 'Variables de Grupo') %>% 
+
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                            full_width = F, font_size = 10, position = 'center')
+
+
+```
+
+***
+```{r echo=F}
+
+if(any(b$Variable %in% 'g_edad')){
+
+data.frame(Categoria=c('Niño/a',
+                       "Adolescencia Temprana",
+                       "Adolescencia Tadía",
+                       "Adulto"),
+           Descripcion=c('Menor de 12 años',
+                     "De 12 a 14 años",
+                     "De 14 a 17 años",
+                     "mayor o igual a 18 años")) %>% as_tibble() %>% 
+    
+    kable(caption='Grupos de niñez y adolescencia') %>% 
+    
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                            full_width = F, font_size = 10, position = 'center')
+
+} else {
+  
+  cat('')
+}
+
+```
+
+***
+
+#### Tags:
+
+  **Objetivos de Desarrollo Sostenible:**
+
+    `r params$ods`
+
+  **Plan Nacional de Desarrollo:**
+
+    `r params$plan`
+
+
+  **Convención sobre los Derechos del Nino:**
+  
+    `r params$convencion`
+
+***
+
+#### Código
+
+***
+
+**Software:** `r params$software`
+
+***
+
+**Librerias:**
+
+```{r echo=T}
+
+library(purrr)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(lubridate)
+library(tibble)
+
+```
+
+***
+
+##### Funciones de Preámbulo:
+
+```{r echo=T}
+
+# Funciones
+
+#Argumentos: 
+
+#f1. Identificacion de mortalidad materna
+#crea la variable 'mor_materna_ind'
+
+fc_mortalidad_mat_ind <- function(data, var) {
+  
+  var <- enquo(var)
+  
+  data %>% 
+    
+    mutate(mor_materna_ind= ifelse(str_detect(string = !!var, 
+                                              pattern = '^PARTO|EMBARAZO|PUERPERIO'), 
+                                   yes = T, 
+                                   no = F)
+           )
+}
+
+#f2. funcion de conteo de casos del indicador
+
+fgrupos <- 
+
+  function(data, vars=c(), varindic=NULL) {
+    
+    if(is.null(varindic)){
+      
+    data %>% group_by_at(.vars = vars) %>% count() %>% ungroup()
+      
+    } else {
+      
+    data %>% filter_at(.vars = varindic, .vars_predicate =  all_vars(.==1)) %>% 
+      
+      group_by_at(.vars = c(vars)) %>% count() %>% ungroup()
+      
+    }
+    
+  }
+
+#f3. funcion que agrega los datos en funcion de las variables de agrupacion 
+
+summarizador <- function(tabla, vars=NULL, varindicad=NULL) {
+  
+  varst <- c(varindicad, vars, 'anio_bs')
+  
+  
+  t <- tabla  %>% group_by_at(.vars = varst) %>% 
+    
+    summarise(casos=sum(n, na.rm = T)) %>% ungroup() 
+  
+  if(!is.null(varindicad)){
+    
+    t %>% 
+      
+      filter_at(.vars = varindicad, .vars_predicate = all_vars(!is.na(.)))
+    
+  }
+  
+  t
+}
+
+
+
+```
+
+##### Función del Indicador: 
+
+```{r echo=T}
+
+  #Argumentos
+  
+  #tabla  : resultado de la funcion fgrupos()
+  #vars   : vector de variables de grupo en character (eg. c('var1','var2'))
+  #proyecciones: Proyecciones de nacimientos vivos 1990-2020
+  #varindicad: variable del indicador creada con la funcion fc_mortalidad_mat_ind
+  
+
+f_r_mor_materna <- 
+  
+  
+  function(tabla, 
+           proyecciones=proy_nac, 
+           vars=c(), 
+           varindicad=NULL){
+  
+  num <- 
+    
+    tabla %>% 
+    
+    summarizador(vars = vars)
+  
+  
+  den <- 
+    
+    proy_nac %>% 
+    
+    rename(prov_fall=prov_nac) %>% 
+    
+    summarizador(vars = vars)
+  
+  #razon
+  
+  num %>% left_join(y = den, by=c(vars, 'anio_bs')) %>% 
+    
+    rename(numerador=casos.x, denominador=casos.y) %>% 
+    
+    mutate(indicador=numerador/denominador*100000) 
+  
+  
+}
+
+
+```
+
+
+
+
+
+
+
+
+
+
+

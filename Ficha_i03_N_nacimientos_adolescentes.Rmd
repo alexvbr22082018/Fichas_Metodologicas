@@ -1,0 +1,358 @@
+---
+author: "Laboratorio Social - INEC"
+date: "16/7/2019"
+output:
+  html_fragment:
+  # html_document:
+    toc: true
+    # toc_float: true
+    toc_collapsed: false
+    toc_depth: 4
+    # highlight: tango
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+library(purrr)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(ggplot2)
+library(lubridate)
+library(tibble)
+library(knitr)
+library(kableExtra)
+
+path <- here::here("data/i01")
+
+a <- readRDS(str_c(path,'/lista_ficha.RDS'))
+
+# a <-
+# 
+#   readRDS('C://Users/DELL/Dropbox/2019_06_UNICEF_social_lab/99_indicadores/03_Resultados_RDS/lista_ficha.RDS')
+
+
+indicador <-  'i03_N_nacimientos_adolescentes'
+
+params <- list(
+  
+  nombreindicador= a[[indicador]][['nombre']],
+  
+  bdd1 = if(a[[indicador]][['base']]=='defunciones_generales') {
+        'Base de datos de Defunciones Generales'} else {
+    
+    if(a[[indicador]][['base']]=='nacimientos') { 
+          'Base de datos de Nacimientos' } else {
+        
+        if(a[[indicador]][['base']]=='defunciones_fetales') {
+              'Base de datos de Defunciones Fetales'} else {
+            
+            if(a[[indicador]][['base']]=='egresos') {
+                  'Base de datos de Egresos Hospitalarios'
+              
+                                                     }
+                                                        }
+                                            }
+                                                   },
+  
+  bdd2 = a[[indicador]][['base2']],
+  
+  unidad = a[[indicador]][['unidad']],
+  
+  interpret = a[[indicador]][['Interpret']],
+  
+  ods = str_c(a[[indicador]][['ods']], a[[indicador]][['ods_desc']], sep = ' '),
+  
+  plan = str_c(a[[indicador]][['plan']], a[[indicador]][['plan_desc']], sep = ' '),
+  
+  convencion = str_c(a[[indicador]][['convencion']], a[[indicador]][['convencion_desc']], sep = ' '),
+  
+  software = 'R version 3.6.1'
+
+)
+
+```
+***
+## Ficha Metodológica
+***
+
+#### Nombre del Indicador: 
+`r params$nombreindicador`
+
+***
+#### Definición:
+El `r params$nombreindicador` es el número de nacimientos en mujeres adolescentes entre 12 y 17 años de edad en un periodo de tiempo $t$. El indicador incluye una subdivisión de adolescencia entre *Adolescencia Temprana* edad [12-14] y *Adolescencia Tardía* edad [15-17]. 
+
+
+***
+#### Periodo:
+2013 - 2017
+
+***
+
+#### Fuente:
+`r params$bdd1`
+<!-- `r params$bdd2` -->
+
+***
+
+### Unidades:
+`r params$unidad`
+
+***
+
+### Interpretación:
+`r params$interpret`
+
+***
+#### Fórmula
+$$ NNA^t= \sum_{j}^{k} \sum_i^n{x_{i,j}^t} $$
+
+- $NNA^t$    : `r params$nombreindicador` en el periodo **t**.
+
+- $x_{i,j}^t$: Nacimiento en la madre **i** que se encuentra en el grupo de edad **j** en el periodo **t**.
+
+- $i$        : Nacimiento en la madre **i**.
+
+- $j$        : Sudivisión del rango de edad de adolescenia en grupos de edad *j* $\epsilon$ (Adolescencia Temprana, Adolescencia                Tardía)
+
+
+***
+
+#### Desagregaciones:
+```{r echo=F}
+
+b <- 
+  
+  a[[indicador]][['labels']] %>% 
+  
+  set_names(nm = c('Variable','label')) %>%
+  
+  group_by(Variable) %>% summarise(Descripcion=first(label))
+
+
+```
+
+
+```{r varlabel, echo=F}
+
+cat('\n')
+
+b %>%
+  
+  kable(caption = 'Variables de Grupo') %>% 
+
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                            full_width = F, font_size = 10, position = 'center')
+
+
+```
+
+***
+```{r echo=F}
+
+if(any(b$Variable %in% 'g_edad')){
+
+data.frame(Categoria=c('Niño/a',
+                       "Adolescencia Temprana",
+                       "Adolescencia Tadía",
+                       "Adulto"),
+           Descripcion=c('Menor de 12 años',
+                     "De 12 a 14 años",
+                     "De 14 a 17 años",
+                     "mayor o igual a 18 años")) %>% as_tibble() %>% 
+    
+    kable(caption='Grupos de niñez y adolescencia') %>% 
+    
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                            full_width = F, font_size = 10, position = 'center')
+
+} else {
+  
+  cat('')
+}
+
+```
+
+***
+
+#### Tags:
+
+  **Objetivos de Desarrollo Sostenible:**
+
+    `r params$ods`
+
+  **Plan Nacional de Desarrollo:**
+
+    `r params$plan`
+
+
+  **Convención sobre los Derechos del Nino:**
+  
+    `r params$convencion`
+
+
+***
+
+#### Código
+
+***
+
+**Software:** `r params$software`
+
+***
+
+**Librerias:**
+
+```{r echo=T}
+
+library(purrr)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(lubridate)
+library(tibble)
+
+```
+
+***
+
+##### Funciones de Preámbulo:
+
+```{r echo=T}
+
+# Funciones
+
+#Argumentos: 
+
+#data: base de datos de Nacimientos
+#varedad: variable de edad en base
+
+g_edad_f <- function(data, 
+                     varedad=edad_f) {
+  
+  varedad <- enquo(varedad) 
+  
+  data %>% 
+    
+    mutate(g_edad=case_when(between(!!varedad, 0,11) ~ 1,
+                            between(!!varedad, 12,14) ~ 2, 
+                            between(!!varedad, 15,17) ~ 3, 
+                            !!varedad>=18 ~4), 
+           g_edad=factor(x = g_edad, 
+                     levels = c(1,2,3,4), 
+                     labels =  c('Nino/a', 
+                                 'Adolesc. Temprana', 
+                                 'Adolesc.Tardia',
+                                 'Adulto/a'), 
+                     ordered = T), 
+           g_edad=as.character(g_edad))
+  
+}
+
+#f1. Identificacion Adolescentes
+#crea la variable 'Adolescente'
+
+fc_adolescentes <- function(data,
+                            vargrupoedad=g_edad #variable resultado de funcion g_edad_f
+                            ) {
+  
+  vargrupoedad <- enquo(vargrupoedad)
+  
+  data %>% 
+    
+    mutate(Adolescente=if_else(!!vargrupoedad %>% str_detect('Adoles'), 
+                               T, F)
+           )
+  
+  }
+
+#f2. funcion de conteo de casos del indicador
+
+fgrupos <- 
+
+  function(data, vars=c(), varindic=NULL) {
+    
+    if(is.null(varindic)){
+      
+    data %>% group_by_at(.vars = vars) %>% count() %>% ungroup()
+      
+    } else {
+      
+    data %>% filter_at(.vars = varindic, .vars_predicate =  all_vars(.==1)) %>% 
+      
+      group_by_at(.vars = c(vars)) %>% count() %>% ungroup()
+      
+    }
+    
+  }
+
+#f3. funcion que agrega los datos en funcion de las variables de agrupacion 
+
+summarizador <- function(tabla, vars=NULL, varindicad=NULL) {
+  
+  varst <- c(varindicad, vars, 'anio_bs')
+  
+  
+  t <- tabla  %>% group_by_at(.vars = varst) %>% 
+    
+    summarise(casos=sum(n, na.rm = T)) %>% ungroup() 
+  
+  if(!is.null(varindicad)){
+    
+    t %>% 
+      
+      filter_at(.vars = varindicad, .vars_predicate = all_vars(!is.na(.)))
+    
+  }
+  
+  t
+}
+
+
+
+```
+
+##### Función del Indicador: 
+
+```{r echo=T}
+
+  #Argumentos
+  
+  #tabla  : resultado de la funcion fgrupos()
+  #vars   : vector de variables de grupo en character (eg. c('var1','var2'))
+  #varindicad: variable del indicador creada con la funcion fc_adolescentes
+  
+f_n_nac_adolesc <- 
+  
+  function(tabla, vars=c(), varindicad="Adolescente") {
+  
+  t <- 
+    
+    tabla %>% mutate(ynac=year(tiempo)) %>%
+    
+    filter(ynac>=2013) %>% 
+    
+    mutate(anio_bs=ynac) %>% 
+    
+    summarizador(vars = vars)
+  
+  t
+    
+    
+    }
+
+```
+
+
+
+
+
+
+
+
+
+
+

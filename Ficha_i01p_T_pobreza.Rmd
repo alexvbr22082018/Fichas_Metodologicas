@@ -1,0 +1,341 @@
+---
+author: "Laboratorio Social - INEC"
+date: "16/7/2019"
+output:
+  html_fragment:
+  # html_document:
+    toc: true
+    # toc_float: true
+    toc_collapsed: false
+    toc_depth: 4
+    # highlight: tango
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+library(purrr)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(ggplot2)
+library(lubridate)
+library(tibble)
+library(knitr)
+library(kableExtra)
+
+
+
+# path <- here::here("app/data/i01")
+# a <- readRDS(str_c(path,'/lista_ficha.RDS'))
+
+# path <- here::here("'C://Users/DELL/Dropbox/2019_06_UNICEF_social_lab/99_indicadores/03_Resultados_RDS/")
+# a <- readRDS(str_c(path,'/lista_ficha.RDS'))
+
+indicador <- "i01p_T_pobreza"
+
+params <- list(
+  
+  
+  nombreindicador= "Tasa de pobreza por ingresos",
+  
+  bdd1 = "Encuesta Nacional de Empleo, Desempleo y Subempleo (ENEMDU)",
+  
+  bdd2 = NULL,
+  
+  unidad = "Porcentaje",
+  
+  interpret = "Un X porciento de la población se encuentran por debajo de la línea de pobreza." ,
+  
+  ods = "Objetivo 1. Fin de la pobreza",
+  
+  plan = "Objetivo 1. Garantizar una vida digna con iguales oportunidades para todas las personas.",
+  
+  convencion = "Artículo 27. Los Estados Partes reconocen el derecho de todo niño a un nivel de vida adecuado para su desarrollo físico, mental, espiritual, moral y social",
+  
+  software = 'Stata 14'
+  )
+
+```
+
+***
+## Ficha Metodológica
+***
+
+#### Nombre del Indicador:
+`r params$nombreindicador`
+
+***
+#### Definición:
+La `r params$nombreindicador` es el total de personas cuyo ingreso per cápita del hogar es inferior al valor de la línea de pobreza, expresado como porcentaje de la población total en un período determinado. 
+
+***
+#### Periodo:
+2013 - 2017
+
+***
+
+#### Fuente:
+- `r params$bdd1`
+- `r params$bdd2`
+
+***
+
+***
+#### Fórmula:
+
+$$ TPYR^t = \frac{\sum_i^n{x_{i(y_j<lp)}^t}}{PT^t} * K $$
+
+- $TPYR^t$    : `r params$nombreindicador` en el periodo **t**.
+
+- $x_{i(y_j<lp)$: Persona **i** pertenenciente al hogar $j$ donde el ingreso per cápita $y_j$ es menor a la línea de la pobreza en el periodo **t**.
+
+- $i$        :  Persona **i**.
+
+- $j$        :  Hogar **j**.
+
+- $PT^t$     : Población Total en el periodo **t**.
+
+- $K$ : Constante = 100.
+
+***
+
+### NOTA:
+
+
+**Línea de la Pobreza:** Corresponde al valor monetario del costo de una canasta básica de bienes y servicios. Se calcula a partrir de la Encuesta de Condiciones de Vida (ECV) 2006, y se actualiza en función del índice de precios al consumidor (IPC) correspondiente al periodo de análisis. 
+
+**Ingréso per cápita:** Determina el ingreso que, en promedio, recibe cada uno de los miembros del hogar. 
+
+
+#### Desagregaciones:
+
+```{r echo=F}
+
+b <- 
+  
+  a[[indicador]][['labels']] 
+
+
+```
+
+
+```{r varlabel, echo=F}
+
+cat('\n')
+
+b %>%
+  
+  kable(caption = 'Variables de Grupo') %>% 
+
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                            full_width = F, font_size = 10, position = 'center')
+
+
+```
+
+***
+```{r echo=F}
+
+if(any(b$Variable %in% 'g_edad')){
+
+data.frame(Categoria=c('Niño/a',
+                       "Adolescencia Temprana",
+                       "Adolescencia Tadía",
+                       "Adulto"),
+           Descripcion=c('Menor de 12 años',
+                     "De 12 a 14 años",
+                     "De 14 a 17 años",
+                     "mayor o igual a 18 años")) %>% as_tibble() %>% 
+    
+    kable(caption='Grupos de niñez y adolescencia') %>% 
+    
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                            full_width = F, font_size = 10, position = 'center')
+
+} else {
+  
+  cat('')
+}
+
+```
+
+***
+
+##### Tags:
+
+
+   **Objetivos de Desarrollo Sostenible:**
+
+    `r params$ods`
+
+  **Plan Nacional de Desarrollo:**
+
+    `r params$plan`
+
+
+  **Convención sobre los Derechos del Nino:**
+  
+    `r params$convencion`
+
+***
+
+##### Código
+***
+
+**Software:** `r params$software`
+
+***
+
+***
+
+```{r echo=T}
+
+# **Descripción de Variables**
+
+# area:  Área
+#           Urbano = 1
+#           Rural = 2
+# P02: Sexo
+# Hombre = 1
+# Mujer = 2
+# P63: Ingresos – Patronos Cta. Propia
+# P64b: Monto para consumo del hogar
+# P65: Monto gastado en funcionamiento negocio
+# P66: Ingreso de asalariados y/o empl. domésticos
+# P67: Descuentos de asalariados
+# P68b: Ingreso en especies o servicios de asalariados
+# P69: Ingreso Ocup. Secundaria – asalariados e independientes
+# P70b: Pago en especies o consumo del hogar – trabajo secundario
+# P71a: Recibe ingresos derivados de capital e inversiones
+# SI = 1
+# No = 2
+# P71b: Monto recibido por derivados de capital e inversiones
+# P72a: Recibe ingresos por jubilación, orfandad, viudez, enfermedad, divorcio, cesantía
+# SI = 1
+# No = 2
+# P72b: Monto recibido por jubilación, orfandad, viudez, enfermedad, divorcio, cesantía
+# P73a: Recibe ingresos por regalos o donaciones de personas que vivan dentro del país
+# SI = 1
+# No = 2
+# P73b: Monto recibido por regalos o donaciones de personas que vivan dentro del país
+# P74a: Recibe ingresos en dinero o en especies del exterior
+# SI = 1
+# No = 2
+# P74b: Monto recibido desde el exterior
+# P75: Recibe BDH
+# SI = 1
+# No = 2
+# P76: Monto que recibió por el BDH
+# P78: Monto que recibió por bono JGL
+# 
+# 
+# **Cálculo del indicador**
+# 
+# clonevar sexo=p02
+# egen npersona=count(sexo), by(idhogar)
+# 
+# ren ingrl ingrl_inec
+# label drop ingrl
+# 
+# generat ingr= 0
+# replace ingr= ingr + p63  if p63 <999999
+# replace ingr= ingr + p64b if p64b<999999 
+# replace ingr= ingr - p65  if p65 <999999
+# replace ingr= ingr + p66  if p66 <999999
+# replace ingr= ingr + p67  if p67 <999999
+# replace ingr= ingr + p68b if p68b<999999
+# 
+# recode ingr (0=.) if (p63==. & p64b==. & p65==. & p66==. & p67==. & p68b==.)
+# 
+# replace ingr=999999 if p63==999999
+# replace ingr=999999 if p66==999999
+# 
+# generat ingrls= 0
+# replace ingrls= ingrls + p69  if p69 <999999
+# replace ingrls= ingrls + p70b if p70b<999999
+# 
+# recode ingrls (0=.) if (p69==. & p70b==.)
+# recode ingrls (0=999999) if (p69==999999 & p70b==999999)
+# recode ingrls (0=999999) if (p69==. & p70b==999999)
+# 
+# generat ingrl= 0
+# replace ingrl= ingrl + ingrls if (ingr<0 & ingrls<999999)
+# replace ingrl= ingrl + ingr + ingrls if (((ingr>0 & ingr<999999)| ingr==0) & (ingrls<999999))
+# replace ingrl= ingrl + ingrls if (ingr==. & ingrls<999999)
+# replace ingrl= ingrl + ingr if (ingrls==. & (ingr>0 & ingr<999999))
+# replace ingrl= -1 if (ingr<0 & ingrls==.)
+# replace ingrl= 999999 if (ingr==999999 & ingrls==.)
+# replace ingrl= 999999 if (ingr==999999 & (ingrls>=0 & ingrls<999999))
+# replace ingrl= 999999 if (ingrls==999999 & (ingr>0 & ingr<999999))
+# 
+# recode ingrl(0=.) if (ingr==. & ingrls==.)
+# 
+# label var ingrl "Ingreso Laboral"
+# label define ingrl -1 "Gasta más de lo que gana" 999999 "No informa"
+# label value ingrl ingrl
+# 
+# label var ingr "Ingreso Trabajo Principal"
+# label value ingr
+# 
+# label var ingrls "Ingreso Ocupación Secundaria"
+# label value ingrls ingrls
+# 
+# generat ingrltot = 0
+# replace ingrltot = ingrltot + p71b if (p71a==1 & p71b<999999)
+# replace ingrltot = ingrltot + p72b if (p72a==1 & p72b<999999)
+# replace ingrltot = ingrltot + p73b if (p73a==1 & p73b<999999)
+# replace ingrltot = ingrltot + p74b if (p74a==1 & p74b<999999)
+# replace ingrltot = ingrltot + p76  if (p75 ==1 & p76 <999999)
+# replace ingrltot = 999999 if (ingrl==999999)
+# replace ingrltot = ingrltot + ingrl if (ingrl>-1 & ingrl<999999)
+# 
+# * PERSONAS QUE NO TIENEN INVERSIONES, TRANSFERENCIAS, BDH Y NO TIENEN INGRESOS DEL TRABAJO.
+# 
+# recode ingrltot (0=.) if (p71b==. & p72b==. & p73b==. & p74b==. & p76==. & p78==. & (ingrl==. | ingrl==-1))   
+# recode ingrltot (0=.) if (ingrl==. & ingrltot==0)
+# 
+# label var ingrltot "Ingreso Total"
+# label define ingrltot 999999 "No informa"
+# label value ingrltot ingrltot
+# 
+#  
+# replace ingrltot = 999999 if (p63 ==999 | p63 ==999 | p63 ==99999)
+# replace ingrltot = 999999 if (p64b==999 | p64b==999 | p64b==99999)
+# replace ingrltot = 999999 if (p65 ==999 | p65 ==999 | p65 ==99999)
+# replace ingrltot = 999999 if (p66 ==999 | p66 ==999 | p66 ==99999)
+# replace ingrltot = 999999 if (p67 ==999 | p67 ==999 | p67 ==99999)
+# replace ingrltot = 999999 if (p68b==999 | p68b==999 | p68b==99999)
+# replace ingrltot = 999999 if (p69 ==999 | p69 ==999 | p69 ==99999)
+# replace ingrltot = 999999 if (p70b==999 | p70b==999 | p70b==99999)
+# replace ingrltot = 999999 if (p71b==999 | p71b==999 | p71b==99999)
+# replace ingrltot = 999999 if (p72b==999 | p72b==999 | p72b==99999)
+# replace ingrltot = 999999 if (p73b==999 | p73b==999 | p73b==99999)
+# replace ingrltot = 999999 if (p74b==999 | p74b==999 | p74b==99999)
+# replace ingrltot = 999999 if (p76 ==999 | p76 ==999 | p76 ==99999)
+# 
+# recode ingrltot (0=.)
+# recode ingrltot (999999=.)
+# 
+# egen ingtot=sum(ingrltot), by(idhogar)
+# gen ingtot_pc=ingtot/npersona
+# recode ingtot_pc (0=.)
+# 
+# gen lipobre= (28.32075*2)*(IPC/((105.45+105.30+105.06)/3))
+# gen liexpobre= (15.96*2)*(IPC/((105.45+105.30+105.06)/3))
+# 
+# *Pobreza por ingresos.-
+# 
+# **Numerador**
+# gen pobre_rural=1 if area==2 & ingtot_pc<lipobre & ingtot_pc>0
+# replace pobre_rural=0 if area==2 & ingtot_pc>=lipobre & ingtot_pc!=.
+
+
+```
+
+
+
+
+***
+
