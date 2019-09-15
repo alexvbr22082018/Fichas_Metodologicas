@@ -25,13 +25,13 @@ library(tibble)
 library(knitr)
 library(kableExtra)
 
-<- here::here("data/i01")
 
-a <- readRDS(str_c'/lista_ficha.RDS'))
+
+
 
 # a <-
 # 
-#   readRDS('C://Users/DELL/Dropbox/2019_06_UNICEF_social_lab/99_indicadores/03_Resultados_RDS/lista_ficha.RDS')
+
 
 indicador <-  'i02_t_muertes_violentas'
 
