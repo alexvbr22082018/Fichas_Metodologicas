@@ -25,9 +25,9 @@ library(tibble)
 library(knitr)
 library(kableExtra)
 
+<- here::here("data/i01")
 
-
-a <- readRDS(str_c(
+a <- readRDS(str_c'/lista_ficha.RDS'))
 
 # a <-
 # 

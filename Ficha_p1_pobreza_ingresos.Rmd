@@ -26,11 +26,11 @@ library(kableExtra)
 
 
 
-# path <- here::here("app/data/i01")
-# a <- readRDS(str_c(path,'/lista_ficha.RDS'))
+#<- here::here("app/data/i01")
+# a <- readRDS(str_c'/lista_ficha.RDS'))
 
-# path <- here::here("'C://Users/DELL/Dropbox/2019_06_UNICEF_social_lab/99_indicadores/03_Resultados_RDS/")
-# a <- readRDS(str_c(path,'/lista_ficha.RDS'))
+#<- here::here("'C://Users/DELL/Dropbox/2019_06_UNICEF_social_lab/99_indicadores/03_Resultados_RDS/")
+# a <- readRDS(str_c'/lista_ficha.RDS'))
 
 
 params <- list(
