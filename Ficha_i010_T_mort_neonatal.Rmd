@@ -32,7 +32,6 @@ library(kableExtra)
 #   readRDS('C://Users/DELL/Dropbox/2019_06_UNICEF_social_lab/99_indicadores/03_Resultados_RDS/lista_ficha.RDS')
 
 
-indicador <-  'i010_T_mort_neonatal'
 
 params <- list(
   
