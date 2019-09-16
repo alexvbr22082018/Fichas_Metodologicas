@@ -26,7 +26,7 @@ library(knitr)
 library(kableExtra)
 
 
-a <- readRDS('/lista_ficha.RDS')
+a <- readRDS('lista_ficha.RDS')
 
 # a <-
 # 

@@ -67,13 +67,13 @@
 
 <h4 id="toc_1">Nombre del Indicador:</h4>
 
-<p>Número de homicidios</p>
+<p>Tasa de accidentes en niñas/as y adolescentes de tránsito por cada 100.000 habitantes</p>
 
 <hr/>
 
 <h4 id="toc_2">Definición:</h4>
 
-<p>El Número de homicidios corresponde al total de defunciones a causa de homicidios en un periodo determinado.</p>
+<p>La Tasa de accidentes en niñas/as y adolescentes de tránsito por cada 100.000 habitantes es la relación entre el total de defunciones en personas menores de 18 años a causa de accidentes de transporte terrestre por cada 100.000 habitantes en un periodo determinado.</p>
 
 <hr/>
 
@@ -85,47 +85,52 @@
 
 <h4 id="toc_4">Fuente:</h4>
 
-<p>Base de datos de Defunciones Generales</p>
+<p>Base de datos de Defunciones Generales
+ Proyecciones Poblacionales 2010-2020</p>
 
 <hr/>
 
 <h3 id="toc_5">Unidades:</h3>
 
-<p>Número de homicidios</p>
+<p>Defunciones de NNA por accidentes de tránsito por cada 100.000 habitantes</p>
 
 <hr/>
 
 <h3 id="toc_6">Interpretación:</h3>
 
-<p>Un total de X personas fallecieron a causa de homicidios en el periodo t</p>
+<p>Por cada 100.000 habitantes, un total de X NNA fallecieron a causa de accidentes de tránsito en el periodo t</p>
 
 <hr/>
 
 <h4 id="toc_7">Fórmula</h4>
 
-<p>\[ MHV^t= \sum_i^n{x_{i}^t} \]</p>
+<p>\[ TMATnna^t= \frac{\sum_i^n{x_{i}^t}}{NNA^t} * 100.000 \]</p>
 
 <ul>
-<li><p>\(MH^t\)    : Número de homicidios en el periodo/año <strong>t</strong>.</p></li>
-<li><p>\(x_{i}^t\)  : Defunción del individuo <strong>i</strong> en el periodo <strong>t</strong> por a causa de homicidio.</p></li>
-<li><p>\(i\)        : Defunción por homicidio individuo <strong>i</strong>.</p></li>
+<li><p>\(TMH^t\)    : Tasa de accidentes en niñas/as y adolescentes de tránsito por cada 100.000 habitantes en el periodo/año <strong>t</strong>.</p></li>
+<li><p>\(x_{i}^t\)  : Defunción del NNA <strong>i</strong> en el periodo <strong>t</strong> debido a un accidente de transporte.</p></li>
+<li><p>\(i\)        : Defunción por accidente de transporte del NNA <strong>i</strong>.</p></li>
+<li><p>\(NNA^t\)     : Proyección poblacional en el periodo <strong>t</strong> de NNA.</p></li>
+<li><p>\(k\)        : Constante=100.000</p></li>
 </ul>
 
 <hr/>
 
 <h5 id="toc_8">NOTA:</h5>
 
+<p>NNA: Niñas/os y Adolescentes (personas menores de 18 años).</p>
+
 <p>La agrupación de las causas de muertes por homicidio se realiza en función de la Clasificación Estadística Internacional de Enfermedades y Problemas Relacionados con la Salud (CIE):</p>
 
-<!--   - Accidentes de Transporte Terrestre: CIE-10 (V00-V99) -->
+<ul>
+<li>Accidentes de Transporte Terrestre: CIE-10 (V00-V99)</li>
+</ul>
 
 <!--   - Otras cuasas de traumatismos accidentales: CIE-10 (W00-X59) -->
 
 <!--   - Suicidios: CIE-10 (X60-X84) -->
 
-<ul>
-<li>Homicidios: CIE-10 (X85-Y09)</li>
-</ul>
+<!-- - Homicidios: CIE-10 (X85-Y09) -->
 
 <!--   - Eventos de Intención no determinada: CIE-10 (Y10-Y34) -->
 
@@ -147,44 +152,8 @@
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> area_fall </td>
-   <td style="text-align:left;"> Área de fallecimiento </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> area_res </td>
-   <td style="text-align:left;"> Área de residencia habitual del fallecido </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> cant_fall </td>
-   <td style="text-align:left;"> Cantón de fallecimiento </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> cant_res </td>
-   <td style="text-align:left;"> Cantón de residencia habitual del fallecido </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> est_civil </td>
-   <td style="text-align:left;"> Estado civil y/o conyugal </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> etnia </td>
-   <td style="text-align:left;"> Autoidentificación étnica </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> g_edad </td>
    <td style="text-align:left;"> Grupos de edad ninez y adolescencia </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> lug_viol </td>
-   <td style="text-align:left;"> Lugar donde ocurrió el hecho violento o accidental </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> niv_inst </td>
-   <td style="text-align:left;"> Nivel de instrucción alcanzado </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> prov_fall </td>
-   <td style="text-align:left;"> Provincia de fallecimiento </td>
   </tr>
   <tr>
    <td style="text-align:left;"> prov_res </td>
@@ -193,10 +162,6 @@
   <tr>
    <td style="text-align:left;"> sexo </td>
    <td style="text-align:left;"> Sexo </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> tiempo </td>
-   <td style="text-align:left;"> Mes-anio </td>
   </tr>
 </tbody>
 </table>
@@ -237,7 +202,7 @@
 
 <p><strong>Objetivos de Desarrollo Sostenible:</strong></p>
 
-<pre><code>Objetivo 16. Paz, justicia e instituciones sólidas
+<pre><code>Objetivo 3. Salud y Bienestar
 </code></pre>
 
 <p><strong>Plan Nacional de Desarrollo:</strong></p>
@@ -278,24 +243,45 @@ library(tibble)
 
 #Argumentos: 
 
-  #f. Identificacion de Muertes violentas por himicidio
+#f. Identificacion de Muertes violentas por accidente de transporte
+#crea la variable &#39;acciden_trans&#39;
 
-  #crea la variable &#39;homicidio&#39;
 
-fc_homicidios &lt;- function(data, 
-                          var) { #var: variable de muertes violentas mor_viol
+fc_acciden_t &lt;- function(data, var) {
 
   var &lt;- enquo(var)
 
   data %&gt;% 
 
-    mutate(homicidio= ifelse(str_detect(string = !!var, 
-                                              pattern = &#39;^HOMICI&#39;),
+    mutate(acciden_trans= ifelse(str_detect(string = !!var, 
+                                              pattern = &#39;^ACCIDENTES&#39;), 
                                    yes = T, 
-                                   no = F))
+                                   no = F)
+    )
 }
 
+#f1.1 Generación de la variable de niña/o y adolescente 
+#crea la variable nna
+
+fc_nna &lt;- function(data,
+                   vargrupoedad=g_edad #variable resultado de funcion g_edad_f
+
+                   ) {
+
+  vargrupoedad &lt;- enquo(vargrupoedad)
+
+  data %&gt;% 
+
+    mutate(nna=if_else(!!vargrupoedad %&gt;% str_detect(&#39;Adoles|^Nin&#39;), 
+                               T, F)
+    )
+
+}
+
+
+
 #f2. funcion de conteo de casos del indicador
+  #varindicad: variables creadas con las funciones fc_acciden_t y fc_nna
 
 fgrupos &lt;- 
 
@@ -345,13 +331,13 @@ summarizador &lt;- function(tabla, vars=NULL, varindicad=NULL) {
   #tabla  : resultado de la funcion fgrupos()
   #vars   : vector de variables de grupo en character (eg. c(&#39;var1&#39;,&#39;var2&#39;))
   #proyecciones: proyecciones poblacionales a 2010-2020
-  #varindicad: variable del indicador creada con la funcion fc_homicidios
 
+# 028 NNA Tasa de accidentes -------------------------------------
 
-f_n_homicidios &lt;- function(tabla,
-                           proyecciones=proy_prov, 
-                           vars=NULL, 
-                           varindicad=NULL
+f_t_accidentes_nna &lt;- function(tabla,
+                               proyecciones=proy_prov, 
+                               vars=c(), 
+                               varindicad=c()
 ) {
 
   t &lt;- 
@@ -361,7 +347,29 @@ f_n_homicidios &lt;- function(tabla,
     summarizador(vars = vars,
                  varindicad = NULL)
 
-  t
+  den &lt;- 
+
+    proyecciones %&gt;%
+
+    summarizador(vars = vars,
+                 varindicad = NULL)
+
+  tf &lt;- 
+
+    t %&gt;% 
+
+    left_join(den,
+
+              by = c(&#39;anio_bs&#39;,vars)
+
+    ) %&gt;% 
+
+    rename(numerador=casos.x,
+           denominador=casos.y) %&gt;% 
+
+    mutate(indicador=numerador/denominador*100000)
+
+  tf
 
 }
 </code></pre>
