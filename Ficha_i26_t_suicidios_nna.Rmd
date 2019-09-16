@@ -82,7 +82,7 @@ params <- list(
 
 ***
 #### Definición:
-La `r params$nombreindicador` es la relación del total de muertes de personas menores de 18 años (NNA) por suicidios por cada 100.000 habitantes.
+La `r params$nombreindicador` es la relación del total de muertes de peronas menores de 18 años (NNA) por suicidios por cada 100.000 habitantes.
 
 ***
 #### Periodo:
@@ -143,6 +143,7 @@ Para más detalle ver [Clasificador CIE-10](http://ais.paho.org/classifications/
 ***
 
 #### Desagregaciones:
+
 ```{r echo=F}
 
 b <- 
