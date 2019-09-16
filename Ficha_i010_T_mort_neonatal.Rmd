@@ -2,13 +2,10 @@
 author: "Laboratorio Social - INEC"
 date: "16/7/2019"
 output:
-  html_fragment:
-  # html_document:
+  html_document:
     toc: true
-    # toc_float: true
     toc_collapsed: false
-    toc_depth: 4
-    # highlight: tango
+    toc_depth: 6
 ---
 
 ```{r setup, include=FALSE}
@@ -33,7 +30,7 @@ library(kableExtra)
 # 
 
 
-
+a <- readRDS('../lista_ficha.RDS')
 indicador <-  'i010_T_mort_neonatal'
 
 params <- list(

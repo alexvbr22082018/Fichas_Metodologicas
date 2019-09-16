@@ -2,13 +2,10 @@
 author: "Laboratorio Social - INEC"
 date: "16/7/2019"
 output:
-  html_fragment:
-  # html_document:
+  html_document:
     toc: true
-    # toc_float: true
     toc_collapsed: false
-    toc_depth: 4
-    # highlight: tango
+    toc_depth: 6
 ---
 
 ```{r setup, include=FALSE}
@@ -31,8 +28,8 @@ library(kableExtra)
 
 
 
-
-
+a <- readRDS("../lista_ficha.RDS")
+a <- readRDS('../lista_ficha.RDS')
 indicador <- "i01p_T_pobreza"
 
 params <- list(
@@ -89,7 +86,7 @@ $$ TPYR^t = \frac{\sum_i^n{x_{i(y_j<lp)}^t}}{PT^t} * K $$
 
 - $TPYR^t$    : `r params$nombreindicador` en el periodo **t**.
 
-- $x_{i(y_j<lp)$: Persona **i** pertenenciente al hogar $j$ donde el ingreso per cápita $y_j$ es menor a la línea de la pobreza en el periodo **t**.
+- $x_{i(y_j<lp)}$: Persona **i** pertenenciente al hogar $j$ donde el ingreso per cápita $y_j$ es menor a la línea de la pobreza en el periodo **t**.
 
 - $i$        :  Persona **i**.
 

@@ -2,12 +2,12 @@
 author: "Laboratorio Social - INEC"
 date: "16/7/2019"
 output:
-  html_fragment:
+  html_document:
   # html_document:
     toc: true
     # toc_float: true
     toc_collapsed: false
-    toc_depth: 4
+    toc_depth: 6
     # highlight: tango
 ---
 
@@ -33,7 +33,7 @@ library(kableExtra)
 # 
 
 
-
+a <- readRDS('../lista_ficha.RDS')
 indicador <-  'i017_n_mort_ninez'
 
 params <- list(
