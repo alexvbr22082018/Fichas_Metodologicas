@@ -3,12 +3,9 @@ author: "Laboratorio Social - INEC"
 date: "16/7/2019"
 output:
   html_document:
-  # html_document:
     toc: true
-    # toc_float: true
     toc_collapsed: false
     toc_depth: 6
-    # highlight: tango
 ---
 
 ```{r setup, include=FALSE}
@@ -24,16 +21,12 @@ library(lubridate)
 library(tibble)
 library(knitr)
 library(kableExtra)
+library(here)
 
 
 
+a <- readRDS('lista_ficha.RDS')
 
-
-# a <-
-# 
-
-
-a <- readRDS('../lista_ficha.RDS')
 indicador <-  'i05_P_nac_asis_salud'
 
 params <- list(
@@ -354,9 +347,6 @@ f_p_nac_asis <- function(tabla,
 
 
 ```
-
-
-
 
 
 

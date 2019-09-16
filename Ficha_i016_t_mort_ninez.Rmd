@@ -3,12 +3,9 @@ author: "Laboratorio Social - INEC"
 date: "16/7/2019"
 output:
   html_document:
-  # html_document:
     toc: true
-    # toc_float: true
     toc_collapsed: false
     toc_depth: 6
-    # highlight: tango
 ---
 
 ```{r setup, include=FALSE}
@@ -24,16 +21,12 @@ library(lubridate)
 library(tibble)
 library(knitr)
 library(kableExtra)
+library(here)
 
 
 
+a <- readRDS('lista_ficha.RDS')
 
-
-# a <-
-# 
-
-
-a <- readRDS('../lista_ficha.RDS')
 indicador <-  'i016_t_mort_ninez'
 
 params <- list(
@@ -110,7 +103,7 @@ $$ TMNN^t = \frac{\sum_i^n{d_{i<=12}^t}}{NV^t} * K $$
 
 - $i$        :  Niña/o **i**.
 
-- $NV^t$     : Nacimientos Vivos en el periodo **t**.
+- $NV^t$     : Nacimientos Vivos en el perioro **t**.
 
 - $K$ : Constante = 1.000.
 
@@ -193,12 +186,10 @@ data.frame(Categoria=c('Niño/a',
 ***
 
 ##### Código
+###### Funciones de Preámbulo:
 
-***
+###### Argumentos:
 
-**Software:** `r params$software`
-
-***
 
 ```{r echo=T}
 

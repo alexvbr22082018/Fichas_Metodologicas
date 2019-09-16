@@ -21,16 +21,12 @@ library(lubridate)
 library(tibble)
 library(knitr)
 library(kableExtra)
+library(here)
 
 
 
+a <- readRDS('lista_ficha.RDS')
 
-
-# a <-
-# 
-
-
-a <- readRDS('../lista_ficha.RDS')
 indicador <-  'i010_T_mort_neonatal'
 
 params <- list(

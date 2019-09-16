@@ -3,12 +3,9 @@ author: "Laboratorio Social - INEC"
 date: "16/7/2019"
 output:
   html_document:
-  # html_document:
     toc: true
-    # toc_float: true
     toc_collapsed: false
     toc_depth: 6
-    # highlight: tango
 ---
 
 ```{r setup, include=FALSE}
@@ -25,15 +22,12 @@ library(tibble)
 library(knitr)
 library(kableExtra)
 
+library(here)
 
 
 
+a <- readRDS('lista_ficha.RDS')
 
-# a <-
-# 
-
-
-a <- readRDS('../lista_ficha.RDS')
 indicador <-  'i03_N_nacimientos_adolescentes'
 
 params <- list(
@@ -345,9 +339,6 @@ f_n_nac_adolesc <-
     }
 
 ```
-
-
-
 
 
 

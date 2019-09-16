@@ -14,11 +14,11 @@ output:
 ***
 
 #### Nombre del Indicador:
-Número de muertes neonatales
+Número de muertes de niñas/os
 
 ***
 #### Definición:
-El Número de muertes neonatales se define como el número de casos de defunciones de neonatos, niña/os menores de un 27 de días de edad en un periodo determinado. 
+El Número de muertes de niñas/os se define como el número de casos de defunciones de niña/os menores de 12 años de edad en un periodo determinado. 
 
 ***
 #### Periodo:
@@ -35,13 +35,14 @@ El Número de muertes neonatales se define como el número de casos de defuncion
 ***
 #### Fórmula:
 
-$$ MN^t = \sum_i^n{d_{i<=27d}^t} $$
+$$ MN^t = \sum_i^n{d_{i<=12}^t} $$
 
-- $TMI^t$    : Número de muertes neonatales en el periodo **t**.
 
-- $d_{i<=27d}^t$: Defunción de neonato **i**, niña/o menor de 27 díasde edad, en el periodo **t**.
+- $TMI^t$    : Número de muertes de niñas/os en el periodo **t**.
 
-- $i$        :  Neonato **i**.
+- $d_{i<12}^t$: Defunción del/a niña/o **i** menor de 12 años de edad en el periodo **t**.
+
+- $i$        :  Niña/o **i**.
 
 
 ***
@@ -135,29 +136,27 @@ $$ MN^t = \sum_i^n{d_{i<=27d}^t} $$
 
 #Argumentos: 
 
-# f. Identificacion de Muertes neonatos
-# crea la variable 'neonato'
+# f. Identificacion de Niñas/os
+# crea la variable 'ninos'
 
-neonatos <- function(data, varnac, varfall){
+fc_ninos <- function(data,
+                     vargrupoedad=g_edad #variable resultado de funcion g_edad_f
+) {
   
-  varnac <- enquo(varnac)
-  varfall <- enquo(varfall)
-  
+  vargrupoedad <- enquo(vargrupoedad)
   
   data %>% 
     
-    mutate(neonato=if_else(condition = (!!varfall-!!varnac)<=27,
-                           true = T, 
-                           false = F))
+    mutate(ninos=if_else(!!vargrupoedad %>% str_detect('^Nin'), 
+                               T, F)
+    )
   
-  }
+}
 
 
-
-#data* : `r params$bdd1`
-#vars* : vector de variables de grupo en character (eg. c('var1','var2'))
 
 #f2. funcion de conteo de casos del indicador
+
 
 fgrupos <- 
 
@@ -209,12 +208,12 @@ summarizador <- function(tabla, vars=NULL, varindicad=NULL) {
   
   #tabla  : resultado de la funcion fgrupos()
   #vars   : vector de variables de grupo en character (eg. c('var1','var2'))
-  #varindicad: variable del indicador creada con la funcion neonatos
+  #varindicad: variable del indicador creada con la funcion fc_ninos
 
 
-f_n_mor_neonat <- function(tabla, 
-                             vars=NULL,
-                             varindicad=NULL){
+f_n_mor_ninez <- function(tabla, 
+                           vars=NULL,
+                           varindicad=NULL){
   #numerador
   
   tabla %>% 

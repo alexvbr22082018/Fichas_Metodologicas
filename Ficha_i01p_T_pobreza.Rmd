@@ -21,15 +21,12 @@ library(lubridate)
 library(tibble)
 library(knitr)
 library(kableExtra)
+library(here)
 
 
 
+a <- readRDS('lista_ficha.RDS')
 
-
-
-
-a <- readRDS("../lista_ficha.RDS")
-a <- readRDS('../lista_ficha.RDS')
 indicador <- "i01p_T_pobreza"
 
 params <- list(
@@ -74,6 +71,7 @@ La `r params$nombreindicador` es el total de personas cuyo ingreso per cápita d
 ***
 
 #### Fuente:
+
 - `r params$bdd1`
 - `r params$bdd2`
 
@@ -86,7 +84,7 @@ $$ TPYR^t = \frac{\sum_i^n{x_{i(y_j<lp)}^t}}{PT^t} * K $$
 
 - $TPYR^t$    : `r params$nombreindicador` en el periodo **t**.
 
-- $x_{i(y_j<lp)}$: Persona **i** pertenenciente al hogar $j$ donde el ingreso per cápita $y_j$ es menor a la línea de la pobreza en el periodo **t**.
+- $x_{i(y_j<lp)$: Persona **i** pertenenciente al hogar $j$ donde el ingreso per cápita $y_j$ es menor a la línea de la pobreza en el periodo **t**.
 
 - $i$        :  Persona **i**.
 
@@ -335,4 +333,3 @@ data.frame(Categoria=c('Niño/a',
 
 
 ***
-

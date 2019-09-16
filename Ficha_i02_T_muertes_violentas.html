@@ -224,28 +224,36 @@ hr {
 <li>
 <a href="#toc_4">Fuente:</a>
 </li>
-<li>
-<a href="#toc_5">Fórmula:</a>
+</ul>
 </li>
 <li>
-<a href="#toc_6">Desagregaciones:</a>
+<a href="#toc_5">Unidades:</a>
+</li>
+<li>
+<a href="#toc_6">Interpretación:</a>
 <ul>
 <li>
-<a href="#toc_7">Tags:</a>
-</li>
-<li>
-<a href="#toc_8">Código</a>
+<a href="#toc_7">Fórmula</a>
 <ul>
 <li>
-<a href="#toc_9">Funciones de Preámbulo:</a>
-</li>
-<li>
-<a href="#toc_10">Argumentos:</a>
-</li>
-<li>
-<a href="#toc_11">Función del Indicador:</a>
+<a href="#toc_8">NOTA:</a>
 </li>
 </ul>
+</li>
+<li>
+<a href="#toc_9">Desagregaciones:</a>
+</li>
+<li>
+<a href="#toc_10">Tags:</a>
+</li>
+<li>
+<a href="#toc_11">Código</a>
+<ul>
+<li>
+<a href="#toc_12">Funciones de Preámbulo:</a>
+</li>
+<li>
+<a href="#toc_13">Función del Indicador:</a>
 </li>
 </ul>
 </li>
@@ -265,13 +273,13 @@ hr {
 
 <h4 id="toc_1">Nombre del Indicador:</h4>
 
-<p>Tasa de mortalidad neonatal por cada mil nacidos vivos</p>
+<p>Tasa de Muertes Violentas por cada 100.000 habitantes</p>
 
 <hr/>
 
 <h4 id="toc_2">Definición:</h4>
 
-<p>La Tasa de mortalidad neonatal por cada mil nacidos vivos es el número de defunciones de neonatos, niña/os menores de un 27 de días de edad, por cada mil nacidos vivos en un periodo determinado. </p>
+<p>La Tasa de Muertes Violentas por cada 100.000 habitantes es la relación del total de muertes por causas violentas o externas que incluyen Homicidios, Suicidios, Accidentes de Transporte Terrestre, Eventos de Intención no determinada, Otras cuasas de traumatismos accidentales, y otras muertes violentas por cada 100.000 habitantes. </p>
 
 <hr/>
 
@@ -283,30 +291,54 @@ hr {
 
 <h4 id="toc_4">Fuente:</h4>
 
+<p>Base de datos de Defunciones Generales
+Proyecciones Poblacionales 2010-2020</p>
+
+<hr/>
+
+<h3 id="toc_5">Unidades:</h3>
+
+<p>Defunciones por cada 100.000 habitantes</p>
+
+<hr/>
+
+<h3 id="toc_6">Interpretación:</h3>
+
+<p>Por cada 100.000 habitantes un total de X personas fallecieron a causa de una muerte violenta en el periodo t</p>
+
+<hr/>
+
+<h4 id="toc_7">Fórmula</h4>
+
+<p>\[ TMV^t= \frac{\sum_i^n{x_{i}^t}}{N^t} * 100.000 \]</p>
+
 <ul>
-<li>Base de datos de Defunciones Generales</li>
-<li>Proyecciones de nacidos vivos 1990-2020</li>
+<li><p>\(TMV^t\)    : Tasa de Muertes Violentas por cada 100.000 habitantes en el periodo/año <strong>t</strong>.</p></li>
+<li><p>\(x_{i}^t\)  : Defunción del individuo <strong>i</strong> en el periodo <strong>t</strong> por una muerte violenta.</p></li>
+<li><p>\(i\)        : Defunción por Muerte Violenta individuo <strong>i</strong>.</p></li>
+<li><p>\(N\)        : Proyección poblacional en el periodo <strong>t</strong>.</p></li>
 </ul>
 
 <hr/>
 
-<hr/>
+<h5 id="toc_8">NOTA:</h5>
 
-<h4 id="toc_5">Fórmula:</h4>
-
-<p>\[ TMN^t = \frac{\sum_i^n{d_{i<=27d}^t}}{NV^t} * K \]</p>
+<p>La agrupación de las causas de muertes violentas se agrupan en función de la Clasificación Estadística Internacional de Enfermedades y Problemas Relacionados con la Salud (CIE):</p>
 
 <ul>
-<li><p>\(TMI^t\)    : Tasa de mortalidad neonatal por cada mil nacidos vivos en el periodo <strong>t</strong>.</p></li>
-<li><p>\(d_{i<=27d}^t\): Defunción de neonato <strong>i</strong>, niña/o menor de 27 díasde edad, en el periodo <strong>t</strong>.</p></li>
-<li><p>\(i\)        :  Neonato <strong>i</strong>.</p></li>
-<li><p>\(NV^t\)     : Nacimientos Vivos en el perioro <strong>t</strong>.</p></li>
-<li><p>\(K\) : Constante = 1.000.</p></li>
+<li>Accidentes de Transporte Terrestre: CIE-10 (V00-V99)</li>
+<li>Otras cuasas de traumatismos accidentales: CIE-10 (W00-X59)</li>
+<li>Suicidios: CIE-10 (X60-X84)</li>
+<li>Homicidios: CIE-10 (X85-Y09)</li>
+<li>Eventos de Intención no determinada: CIE-10 (Y10-Y34)</li>
+<li>Otras muertes violentas: CIE-10 (Y35-Y98)</li>
 </ul>
+
+<p>Para más detalle ver <a href="http://ais.paho.org/classifications/Chapters/pdf/Volume1.pdf">Clasificador CIE-10</a></p>
 
 <hr/>
 
-<h4 id="toc_6">Desagregaciones:</h4>
+<h4 id="toc_9">Desagregaciones:</h4>
 
 <table class="table table-striped table-hover table-condensed table-responsive" style="font-size: 10px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">Variables de Grupo</caption>
@@ -318,17 +350,53 @@ hr {
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> prov_fall </td>
-   <td style="text-align:left;"> Provincia de fallecimiento </td>
+   <td style="text-align:left;"> g_edad </td>
+   <td style="text-align:left;"> Grupos de edad ninez y adolescencia </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> prov_res </td>
+   <td style="text-align:left;"> Provincia de residencia habitual del fallecido </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> sexo </td>
+   <td style="text-align:left;"> Sexo </td>
   </tr>
 </tbody>
 </table>
 
 <hr/>
 
+<table class="table table-striped table-hover table-condensed table-responsive" style="font-size: 10px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">Grupos de niñez y adolescencia</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Categoria </th>
+   <th style="text-align:left;"> Descripcion </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Niño/a </td>
+   <td style="text-align:left;"> Menor de 12 años </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Adolescencia Temprana </td>
+   <td style="text-align:left;"> De 12 a 14 años </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Adolescencia Tadía </td>
+   <td style="text-align:left;"> De 14 a 17 años </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Adulto </td>
+   <td style="text-align:left;"> mayor o igual a 18 años </td>
+  </tr>
+</tbody>
+</table>
+
 <hr/>
 
-<h5 id="toc_7">Tags:</h5>
+<h4 id="toc_10">Tags:</h4>
 
 <p><strong>Objetivos de Desarrollo Sostenible:</strong></p>
 
@@ -347,37 +415,44 @@ hr {
 
 <hr/>
 
-<h5 id="toc_8">Código</h5>
+<h4 id="toc_11">Código</h4>
 
-<h6 id="toc_9">Funciones de Preámbulo:</h6>
+<hr/>
 
-<h6 id="toc_10">Argumentos:</h6>
+<p><strong>Software:</strong> R version 3.6.1</p>
+
+<hr/>
+
+<p><strong>Librerias:</strong></p>
+
+<pre><code class="r">library(purrr)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(lubridate)
+library(tibble)
+</code></pre>
+
+<hr/>
+
+<h5 id="toc_12">Funciones de Preámbulo:</h5>
 
 <pre><code class="r"># Funciones
 
-#Argumentos: 
+#f1. Genracion de muerte violenta
+#crea la variable muerte violenta
 
-# f. Identificacion de Muertes neonatos
-# crea la variable &#39;neonato&#39;
+fc_muerte_violenta &lt;- function(data) {   
 
-neonatos &lt;- function(data, varnac, varfall){
+  data %&gt;%
 
-  varnac &lt;- enquo(varnac)
-  varfall &lt;- enquo(varfall)
+  mutate(muerte_violenta=ifelse(str_detect(string = mor_viol,
 
-
-  data %&gt;% 
-
-    mutate(neonato=if_else(condition = (!!varfall-!!varnac)&lt;=27,
-                           true = T, 
-                           false = F))
-
+  pattern = &#39;^ACCIDENTES DE TRANSPORTE|^HOMICIDIOS|^EVENTOS DE INTENCIÓN NO DETERMINADA|^OTRAS CAUSAS DETRAUMATISMOS ACCIDENTALES|^OTRAS MUERTES VIOLENTAS|^SUICIDIOS&#39;), 
+         T,
+         F)
+  )
   }
-
-
-
-#data* : `r params$bdd1`
-#vars* : vector de variables de grupo en character (eg. c(&#39;var1&#39;,&#39;var2&#39;))
 
 #f2. funcion de conteo de casos del indicador
 
@@ -422,47 +497,53 @@ summarizador &lt;- function(tabla, vars=NULL, varindicad=NULL) {
 }
 </code></pre>
 
-<h6 id="toc_11">Función del Indicador:</h6>
+<h5 id="toc_13">Función del Indicador:</h5>
 
 <pre><code class="r">  #Argumentos
 
   #tabla  : resultado de la funcion fgrupos()
+  #proyecciones  : proyecciones poblacionales 2010 - 2020
   #vars   : vector de variables de grupo en character (eg. c(&#39;var1&#39;,&#39;var2&#39;))
-  #proyecciones: proyecciones nacidos vivos 1990 - 2020
-  #varindicad: variable del indicador creada con la funcion neonatos
+  #varindicad: variable del indicador creada con la funcion fc_muerte_violenta
 
+f_t_mor_viol &lt;- function(tabla, 
+                         proyecciones=proy_prov, 
+                         vars=c(), 
+                         varindicad=&#39;muerte_violenta&#39;
+                         ) {
 
-f_t_mor_neonat   &lt;- function(tabla, 
-                             vars=NULL,
-                             proyecciones=proy_nac, 
-                             varindicad=NULL){
-  #numerador
-
-  num &lt;- 
+  t &lt;- 
 
     tabla %&gt;% 
 
-    summarizador(vars = vars)
-
-  #denominador
+    summarizador(vars = vars,
+                 varindicad = NULL)
 
   den &lt;- 
 
-    proy_nac %&gt;% 
+    proyecciones %&gt;%
 
-    rename(prov_fall=prov_nac) %&gt;%
+      summarizador(vars = vars,
+                   varindicad = NULL)
 
-    summarizador(vars = vars)
+  tf &lt;- 
 
-  #indicador
+    t %&gt;% 
 
-  num %&gt;% left_join(y = den, by=c(vars, &#39;anio_bs&#39;)) %&gt;% 
+    left_join(den,
 
-    rename(numerador=casos.x, denominador=casos.y) %&gt;% 
+              by = c(&#39;anio_bs&#39;,vars)
 
-    mutate(indicador=numerador/denominador*1000)
+              ) %&gt;% 
 
-}
+    rename(numerador=casos.x,
+           denominador=casos.y) %&gt;% 
+
+    mutate(indicador=numerador/denominador*100000)
+
+  tf
+
+  }
 </code></pre>
 
 </body>
