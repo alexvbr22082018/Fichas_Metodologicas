@@ -2,10 +2,13 @@
 author: "Laboratorio Social - INEC"
 date: "16/7/2019"
 output:
-  html_document:
+  html_fragment:
+  # html_document:
     toc: true
+    # toc_float: true
     toc_collapsed: false
-    toc_depth: 6
+    toc_depth: 4
+    # highlight: tango
 ---
 
 ```{r setup, include=FALSE}
@@ -21,13 +24,16 @@ library(lubridate)
 library(tibble)
 library(knitr)
 library(kableExtra)
-library(here)
-
 
 
 a <- readRDS('lista_ficha.RDS')
 
-indicador <-  'i04_T_nacimientos_adolescentes'
+# a <-
+# 
+#   readRDS('C://Users/DELL/Dropbox/2019_06_UNICEF_social_lab/99_indicadores/03_Resultados_RDS/lista_ficha.RDS')
+
+
+indicador <-  'i28_t_accid_nna'
 
 params <- list(
   
@@ -76,7 +82,7 @@ params <- list(
 
 ***
 #### Definición:
-La `r params$nombreindicador` es la relación del número de nacimientos en mujeres adolescentes entre 12 y 17 años de edad en un periodo de tiempo $t$ con respecto al total de mujeres en el mismo rango de edad en el mismo periodo. El indicador incluye una subdivisión de adolescencia entre *Adolescencia Temprana* edad [12-14] y *Adolescencia Tardía* edad [15-17]. 
+La `r params$nombreindicador` es la relación entre el total de defunciones en personas menores de 18 años a causa de accidentes de transporte terrestre por cada 100.000 habitantes en un periodo determinado.
 
 ***
 #### Periodo:
@@ -85,8 +91,8 @@ La `r params$nombreindicador` es la relación del número de nacimientos en muje
 ***
 
 #### Fuente:
-`r params$bdd1`
-`r params$bdd2`
+ `r params$bdd1`
+ `r params$bdd2`
 
 ***
 
@@ -100,38 +106,42 @@ La `r params$nombreindicador` es la relación del número de nacimientos en muje
 
 ***
 #### Fórmula
-$$ TNA^t= \frac{\sum_{j}^{k} \sum_i^n{x_{i,j}^t}}{\sum NP^t} $$
 
-- $TNA^t$    : `r params$nombreindicador` en el periodo **t**.
+$$ TMATnna^t= \frac{\sum_i^n{x_{i}^t}}{NNA^t} * 100.000 $$
 
-- $x_{i,j}^t$: Nacimiento **i** en la madre adolescente que se encuentra en el rango de edad **j** en el periodo **t**.
 
-- $\sum NP^t$: Población total en el periodo *t*.
+- $TMH^t$    : `r params$nombreindicador` en el periodo/año **t**.
 
-- $i$        : Nacimiento **i** en madre adolescente.
+- $x_{i}^t$  : Defunción del NNA **i** en el periodo **t** debido a un accidente de transporte.
 
-- $j$        : Sudivisión del rango de edad de adolescenia en grupos de edad *j* $\epsilon$ (Adolescencia Temprana, Adolescencia                Tardía).
+- $i$        : Defunción por accidente de transporte del NNA **i**.
 
-<!-- *** -->
+- $NNA^t$     : Proyección poblacional en el periodo **t** de NNA.
 
-<!-- ##### NOTA: -->
+- $k$        : Constante=100.000
 
-<!-- La agrupación de las causas de muertes violentas se agrupan en función de la Clasificación Estadística Internacional de Enfermedades y Problemas Relacionados con la Salud (CIE): -->
+***
 
-<!--   - Accidentes de Transporte Terrestre: CIE-10 (V00-V99) -->
+##### NOTA:
+
+NNA: Niñas/os y Adolescentes (personas menores de 18 años).
+
+La agrupación de las causas de muertes por homicidio se realiza en función de la Clasificación Estadística Internacional de Enfermedades y Problemas Relacionados con la Salud (CIE):
+
+  - Accidentes de Transporte Terrestre: CIE-10 (V00-V99)
+
 <!--   - Otras cuasas de traumatismos accidentales: CIE-10 (W00-X59) -->
 <!--   - Suicidios: CIE-10 (X60-X84) -->
-<!--   - Homicidios: CIE-10 (X85-Y09) -->
+<!-- - Homicidios: CIE-10 (X85-Y09) -->
 <!--   - Eventos de Intención no determinada: CIE-10 (Y10-Y34) -->
 <!--   - Otras muertes violentas: CIE-10 (Y35-Y98) -->
 
-<!-- Para más detalle ver [Clasificador CIE-10](http://ais.paho.org/classifications/Chapters/pdf/Volume1.pdf) -->
+Para más detalle ver [Clasificador CIE-10](http://ais.paho.org/classifications/Chapters/pdf/Volume1.pdf)
 
 
 ***
 
 #### Desagregaciones:
-
 ```{r echo=F}
 
 b <- 
@@ -190,7 +200,7 @@ data.frame(Categoria=c('Niño/a',
 
 #### Tags:
 
-   **Objetivos de Desarrollo Sostenible:**
+  **Objetivos de Desarrollo Sostenible:**
 
     `r params$ods`
 
@@ -202,7 +212,7 @@ data.frame(Categoria=c('Niño/a',
   **Convención sobre los Derechos del Nino:**
   
     `r params$convencion`
-
+    
 ***
 
 #### Código
@@ -236,49 +246,45 @@ library(tibble)
 
 #Argumentos: 
 
-#data: base de datos de Nacimientos
-#varedad: variable de edad en base
+#f. Identificacion de Muertes violentas por accidente de transporte
+#crea la variable 'acciden_trans'
 
-g_edad_f <- function(data, 
-                     varedad=edad_f) {
+
+fc_acciden_t <- function(data, var) {
   
-  varedad <- enquo(varedad) 
+  var <- enquo(var)
   
   data %>% 
     
-    mutate(g_edad=case_when(between(!!varedad, 0,11) ~ 1,
-                            between(!!varedad, 12,14) ~ 2, 
-                            between(!!varedad, 15,17) ~ 3, 
-                            !!varedad>=18 ~4), 
-           g_edad=factor(x = g_edad, 
-                     levels = c(1,2,3,4), 
-                     labels =  c('Nino/a', 
-                                 'Adolesc. Temprana', 
-                                 'Adolesc.Tardia',
-                                 'Adulto/a'), 
-                     ordered = T), 
-           g_edad=as.character(g_edad))
-  
+    mutate(acciden_trans= ifelse(str_detect(string = !!var, 
+                                              pattern = '^ACCIDENTES'), 
+                                   yes = T, 
+                                   no = F)
+    )
 }
 
-#f1. Identificacion Adolescentes
-#crea la variable 'Adolescente'
+#f1.1 Generación de la variable de niña/o y adolescente 
+#crea la variable nna
 
-fc_adolescentes <- function(data,
-                            vargrupoedad=g_edad #variable resultado de funcion g_edad_f
-                            ) {
+fc_nna <- function(data,
+                   vargrupoedad=g_edad #variable resultado de funcion g_edad_f
+                   
+                   ) {
   
   vargrupoedad <- enquo(vargrupoedad)
   
   data %>% 
     
-    mutate(Adolescente=if_else(!!vargrupoedad %>% str_detect('Adoles'), 
+    mutate(nna=if_else(!!vargrupoedad %>% str_detect('Adoles|^Nin'), 
                                T, F)
-           )
+    )
   
-  }
+}
+
+
 
 #f2. funcion de conteo de casos del indicador
+  #varindicad: variables creadas con las funciones fc_acciden_t y fc_nna
 
 fgrupos <- 
 
@@ -331,47 +337,54 @@ summarizador <- function(tabla, vars=NULL, varindicad=NULL) {
   #Argumentos
   
   #tabla  : resultado de la funcion fgrupos()
-  #proyecciones  : proyecciones poblacionales 2010 - 2020
   #vars   : vector de variables de grupo en character (eg. c('var1','var2'))
-  #varindicad: variable del indicador creada con la funcion fc_adolescentes
-  
-f_t_nac_adolesc <- function(tabla, 
-                            proyecciones=proy_prov, 
-                            vars=c(), varindicad='Adolescente') {
-  
-  
-  v <- str_subset(string = vars, pattern = '[^tiempo]')
+  #proyecciones: proyecciones poblacionales a 2010-2020
+
+# 028 NNA Tasa de accidentes -------------------------------------
+
+f_t_accidentes_nna <- function(tabla,
+                               proyecciones=proy_prov, 
+                               vars=c(), 
+                               varindicad=c()
+) {
   
   t <- 
     
-    tabla %>% mutate(ynac=year(tiempo)) %>%
+    tabla %>% 
     
-    filter(ynac>=2013) %>% 
-    
-    mutate(anio_bs=ynac) %>% 
-    
-    summarizador(vars = v)
+    summarizador(vars = vars,
+                 varindicad = NULL)
   
   den <- 
     
-    proyecciones %>% 
+    proyecciones %>%
     
-    summarizador(vars = v)
-
+    summarizador(vars = vars,
+                 varindicad = NULL)
   
   tf <- 
     
-    t %>% left_join(y = den, by=c(v, 'anio_bs')) %>% 
+    t %>% 
     
-    rename(numerador=casos.x, denominador=casos.y) %>% 
+    left_join(den,
+              
+              by = c('anio_bs',vars)
+              
+    ) %>% 
     
-    mutate(indicador=numerador/denominador*1000)
+    rename(numerador=casos.x,
+           denominador=casos.y) %>% 
+    
+    mutate(indicador=numerador/denominador*100000)
   
   tf
-    
-  }
+  
+}
 
 ```
+
+
+
 
 
 

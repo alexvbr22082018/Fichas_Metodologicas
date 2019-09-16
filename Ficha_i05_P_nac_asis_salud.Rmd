@@ -118,11 +118,12 @@ $$ PNAPS^t= \frac{\sum_{j}^{k} \sum_i^n{x_{i,j}^t}}{\sum NV^t} $$
 ***
 
 #### Desagregaciones:
+
 ```{r echo=F}
 
 b <- 
   
-  a[[params$base]][['labels']] %>% 
+  a[[indicador]][['labels']] %>% 
   
   set_names(nm = c('Variable','label')) %>%
   
